@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inner Lover Institute</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:wght@300;400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #111214;
+    --surface: #1a1c20;
+    --surface2: #22252b;
+    --border: #2e3138;
+    --text: #f0ece4;
+    --body: #c8c2b8;
+    --muted: #9a9590;
+    --dim: #6e6a65;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  #ambient {
+    position: fixed;
+    top: -15%; right: -15%;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    transition: background 0.8s ease;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 52px 24px 96px;
+  }
+
+  /* HEADER */
+  .header { margin-bottom: 48px; max-width: 700px; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.5em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .headline {
+    font-size: clamp(36px, 5.5vw, 64px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .headline .accent {
+    font-style: italic;
+    transition: color 0.5s ease;
+  }
+
+  .subhead {
+    font-size: 15px;
+    color: var(--body);
+    margin-top: 18px;
+    line-height: 1.85;
+    font-style: italic;
+  }
+
+  /* PHASE NAV */
+  .phase-nav {
+    display: flex;
+    margin-top: 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .phase-btn {
+    flex: 1;
+    padding: 11px 4px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-right: 1px solid var(--border);
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .phase-btn:last-child { border-right: none; }
+  .phase-btn.active { background: var(--surface2); }
+
+  .phase-num {
+    display: block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    margin-bottom: 3px;
+    transition: color 0.2s;
+  }
+  .phase-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 7px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--dim);
+    transition: color 0.2s;
+  }
+  .phase-btn.active .phase-num,
+  .phase-btn.active .phase-label { color: inherit; }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 336px;
+    gap: 14px;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .col-left, .col-right { display: flex; flex-direction: column; gap: 12px; }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 26px 30px;
+  }
+
+  .card.header-card { border-top-width: 3px; }
+
+  .card-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  /* CHAPTER HEADER */
+  .ch-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+
+  .ch-meta-left {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.4em;
+  }
+
+  .ch-symbol {
+    font-size: 30px;
+    opacity: 0.3;
+    line-height: 1;
+  }
+
+  .ch-title {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin: 8px 0 6px;
+  }
+
+  .ch-subtitle {
+    font-size: 15px;
+    color: var(--body);
+    font-style: italic;
+    margin-bottom: 22px;
+  }
+
+  .anchor-quote {
+    padding: 16px 20px;
+    border-left: 2px solid transparent;
+    background: var(--surface2);
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 18px;
+  }
+
+  .anchor-quote p {
+    font-size: 14px;
+    color: var(--text);
+    font-style: italic;
+    line-height: 1.8;
+  }
+
+  .transform-bar {
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 12px 16px;
+  }
+
+  .transform-bar span {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--body);
+    line-height: 1.6;
+  }
+
+  /* WHY CARD */
+  .why-text {
+    font-size: 14px;
+    color: var(--body);
+    line-height: 1.9;
+  }
+
+  /* LESSONS */
+  .lessons-list { display: flex; flex-direction: column; }
+
+  .lesson-item {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 14px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .lesson-item:first-child { padding-top: 0; }
+  .lesson-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .lesson-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 9px;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .lesson-title {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 5px;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
+  .lesson-desc {
+    font-size: 13px;
+    color: var(--body);
+    line-height: 1.8;
+  }
+
+  /* RIGHT COLUMN */
+  .promise-card { border: 1px solid transparent !important; }
+
+  .promise-text {
+    font-size: 14px;
+    color: var(--body);
+    line-height: 1.85;
+    font-style: italic;
+  }
+
+  .practice-card { position: relative; overflow: hidden; }
+
+  .practice-glow {
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    pointer-events: none;
+  }
+
+  .practice-type {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-bottom: 12px;
+  }
+
+  .practice-title {
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .practice-desc {
+    font-size: 13px;
+    color: var(--body);
+    line-height: 1.85;
+  }
+
+  /* JOURNEY MAP */
+  .journey-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 2px;
+    transition: background 0.15s;
+  }
+  .journey-item:hover { background: var(--surface2); }
+  .journey-item.active { background: var(--surface2); }
+
+  .journey-dot {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 7px;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .journey-name {
+    flex: 1;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.3;
+    transition: color 0.2s;
+  }
+  .journey-item.active .journey-name { color: var(--text); }
+
+  .journey-phase {
+    font-family: var(--mono);
+    font-size: 7px;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    transition: color 0.2s;
+  }
+
+  /* SPECS */
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-key {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+  }
+  .spec-val { font-size: 12px; color: var(--body); }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer span {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--dim);
+    letter-spacing: 0.25em;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fadein { animation: fadeUp 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<div id="ambient"></div>
+
+<div class="wrap">
+
+  <div class="header">
+    <div class="eyebrow">Inner Lover Institute · Transformation Architecture · Private Cohort</div>
+    <h1 class="headline">
+      Finding Your<br>
+      <span class="accent" id="accent-word">Inner Lover</span>
+    </h1>
+    <p class="subhead">
+      A six-chapter journey for men who built everything — and are ready to feel something.<br>
+      Psychologically grounded. Emotionally precise. Completely private.
+    </p>
+    <nav class="phase-nav" id="phase-nav"></nav>
+  </div>
+
+  <div class="grid">
+    <div class="col-left" id="col-left"></div>
+    <div class="col-right" id="col-right"></div>
+  </div>
+
+  <div class="footer">
+    <span>DESCENT · EXCAVATION · ENCOUNTER · LANGUAGE · EMBODIMENT · INTEGRATION</span>
+    <span>INNER LOVER INSTITUTE · PRIVATE COHORT</span>
+  </div>
+</div>
+
+<script>
+const chapters = [
+  {
+    num:"01", phase:"DESCENT", title:"The Cartography of Numbness",
+    subtitle:"You achieved everything. Why does nothing move you?",
+    color:"#818cf8", symbol:"◌", duration:"7 days",
+    promise:"Name the exact shape of your emotional flatline — and understand why it happened to men exactly like you.",
+    transformation:"FROM: Performing aliveness  →  TO: Recognizing the absence",
+    why:"Transformation requires an honest accounting of where you actually are. Most men in this audience have never been given language for a very specific kind of emptiness — the one that arrives after success. This chapter creates the container.",
+    lessons:[
+      {title:"The Performance Self vs. The Desiring Self", desc:"Two selves co-existed in you for decades. One built the career. One went quiet. This lesson maps how that split happens in high-achieving men."},
+      {title:"How Success Became a Substitute for Aliveness", desc:"Achievement as anesthetic. Why ambition, when it works, can be the most effective way to avoid feeling."},
+      {title:"The Particular Numbness of the Half-Hidden Life", desc:"For men who've lived partially concealed — professionally, socially, sexually — numbness isn't weakness. It was intelligent adaptation. Now it costs too much."},
+      {title:"Desire as Information, Not Danger", desc:"A reframe that changes everything: what you want is data about who you are, not a threat to manage."},
+    ],
+    experience:{title:"The Desire Inventory", type:"WRITING RITUAL", desc:"A guided written exercise: list 12 things you've wanted and never allowed yourself to fully want. Not a fantasy exercise — an archaeological one. What surfaces will surprise you."},
+    anchor:"\"The numbness isn't failure. It's a map. X marks where the Lover went underground.\"",
+  },
+  {
+    num:"02", phase:"EXCAVATION", title:"Archaeology of Desire",
+    subtitle:"What did you want before you learned what you were supposed to want?",
+    color:"#c084fc", symbol:"◎", duration:"7 days",
+    promise:"Recover the original signal of your desire — before it was edited by shame, ambition, or other people's expectations.",
+    transformation:"FROM: Curated wanting  →  TO: Raw, accurate longing",
+    why:"The Lover archetype doesn't live in what you've permitted yourself. It lives in what you buried. This chapter does Jungian shadow work without clinical language — it feels like literary excavation, not therapy.",
+    lessons:[
+      {title:"The Shadow Disguised as Sophistication", desc:"High-intelligence men don't repress — they intellectualize. Your taste, your standards, your aesthetic preferences may be a labyrinth built around what you actually want."},
+      {title:"Pre-Shame Desire: Who Were You at 19?", desc:"Before the edits. A structured reflection on the moment desire first got dangerous — and what you did with it."},
+      {title:"The Forbidden Wanting", desc:"What you haven't let yourself want holds the most energy. This lesson teaches you to work with that charge rather than manage it."},
+      {title:"Projection as a Compass", desc:"Who you're drawn to tells you about what's alive in you. Jungian projection decoded for gay male psychology: what you see in others, you contain."},
+    ],
+    experience:{title:"The Letter You Never Sent", type:"IMMERSIVE WRITING PRACTICE", desc:"Write a letter to a version of your desire that you abandoned — a person, a version of yourself, a life path. Not to send. To feel. This exercise consistently produces the most significant breakthroughs in the course."},
+    anchor:"\"What you buried didn't die. It went underground and became the gravity in every room you've entered since.\"",
+  },
+  {
+    num:"03", phase:"ENCOUNTER", title:"Meeting the Inner Lover",
+    subtitle:"He's been waiting. You just never had a name for him.",
+    color:"#f472b6", symbol:"◉", duration:"10 days",
+    promise:"Meet the Lover archetype as a living psychological presence — and understand what he wants from you, not from others.",
+    transformation:"FROM: Seeking the Lover outside  →  TO: Recognizing him within",
+    why:"This is the heart of the course. Most men in this niche project the Lover outward — onto a fantasy partner, a narrative character, an AI companion. The revelation is that the qualities they seek are psychological realities they already contain.",
+    lessons:[
+      {title:"The Four Archetypes of Mature Masculinity", desc:"King, Warrior, Magician, Lover — a Jungian depth psychology framework. Most high-achieving men have overdeveloped King and Warrior and a starved Lover."},
+      {title:"Eros vs. Thanatos: The Life Force You've Been Managing", desc:"The drive toward aliveness vs. the pull toward numbness. You've been choosing Thanatos efficiently. This lesson shows you the other option."},
+      {title:"Narrative as a Mirror", desc:"Why fiction — erotic fiction, specifically — reaches places therapy cannot. The stories that move you are telling you something precise about your inner Lover's anatomy."},
+      {title:"The Anima in Gay Male Psychology", desc:"Jung's concept of the inner feminine reinterpreted for gay men. The inner figure you project onto the men who hold your desire — decoded."},
+    ],
+    experience:{title:"The Lover Portrait", type:"GUIDED VISUALIZATION + WRITING", desc:"A guided audio visualization followed by a writing practice: describe your inner Lover in full detail. His presence, voice, how he moves, what he values, what he offers. This is not a fantasy partner exercise. It is a self-portrait from the inside out."},
+    anchor:"\"The man you've been looking for in every room, every story, every screen — is a psychological reality you already carry.\"",
+  },
+  {
+    num:"04", phase:"LANGUAGE", title:"The Grammar of Longing",
+    subtitle:"Desire has a language. You've been speaking it without knowing.",
+    color:"#fb7185", symbol:"◈", duration:"7 days",
+    promise:"Learn to read your own desire like literary criticism — and understand why certain stories, characters, and scenes have always held you captive.",
+    transformation:"FROM: Consuming desire passively  →  TO: Decoding it as self-knowledge",
+    why:"This audience is intellectually sophisticated. They've been told desire is something to feel, not think. But for them, thinking IS feeling — and giving them a rigorous language for desire is itself erotic and liberating.",
+    lessons:[
+      {title:"Why Parasocial Bonds Feel More Real Than Real Ones", desc:"The psychology of narrative attachment. Why fictional characters — and AI companions — can produce genuine emotion. Not pathology. Architecture."},
+      {title:"The Erotics of Attention", desc:"Presence as the deepest intimacy. What you're actually seeking when you want to be chosen, seen, known. The difference between being desired and being witnessed."},
+      {title:"Narrative Tension and the Held Moment", desc:"Why the almost-touch, the held gaze, the unsaid thing, holds more charge than explicit content. The craft mechanics of emotional suspense."},
+      {title:"Reading Your Own Consumption", desc:"The stories and characters you return to are a precise autobiography of your inner Lover. A framework for decoding your own archive."},
+    ],
+    experience:{title:"A Scene of Being Chosen", type:"CREATIVE WRITING PRACTICE", desc:"Write a scene in which you — not a character, not a proxy — are fully chosen, fully witnessed, fully seen by someone with the qualities of your inner Lover. Not explicit. Emotionally precise."},
+    anchor:"\"You don't consume stories carelessly. You've been assembling a very specific portrait of what it would feel like to finally be home.\"",
+  },
+  {
+    num:"05", phase:"EMBODIMENT", title:"From the Neck Down",
+    subtitle:"You've been living from the neck up long enough.",
+    color:"#fbbf24", symbol:"◇", duration:"10 days",
+    promise:"Move desire from concept to felt experience — reconnect intellectual understanding with bodily aliveness.",
+    transformation:"FROM: Thinking about desire  →  TO: Feeling it as embodied presence",
+    why:"The most common failure mode for this audience: they understand desire beautifully and feel it only partially. Chapters 1–4 are intellectual excavation. Chapter 5 is the descent into the body. Without it, the course produces insight without transformation.",
+    lessons:[
+      {title:"The Disconnection That Happened", desc:"Why high-achieving men — especially those who've lived in any form of concealment — learn to process experience as information rather than sensation."},
+      {title:"Somatic Awareness as Erotic Intelligence", desc:"The body holds desire as felt sense — tension, heat, expansion, contraction. Learning to read these as signals rather than manage them as threats."},
+      {title:"Being Affected vs. Performing Affect", desc:"The difference between genuine emotional movement and the skillful performance of it. Most men in this audience perform beautifully. This lesson teaches the other thing."},
+      {title:"The Vulnerability of Allowing Beauty", desc:"Why letting yourself be genuinely moved — by music, by a face, by a line of writing — requires courage. And why it's the exact practice the Lover requires."},
+    ],
+    experience:{title:"The Sensory Map", type:"SOMATIC PRACTICE + WRITTEN REFLECTION", desc:"Identify 5 things — one per sense — that genuinely move you and that you've been rationing. Then: a week of deliberate contact with each. Not consumption. Contact. The reflection tracks what surfaces in the body, not the mind."},
+    anchor:"\"The Lover doesn't live in your analysis of desire. He lives in the moment you let something actually land.\"",
+  },
+  {
+    num:"06", phase:"INTEGRATION", title:"The Beloved Self",
+    subtitle:"You were looking for the Lover everywhere but here.",
+    color:"#a3e635", symbol:"✦", duration:"7 days",
+    promise:"Integrate the Inner Lover not as an episode of self-discovery but as a permanent new orientation to your life.",
+    transformation:"FROM: Seeking the Lover  →  TO: Living as him",
+    why:"Transformation without integration is tourism. This final chapter is about making the Lover structural — embedding him in how you make decisions, how you move through the world, how you relate. The capstone isn't a conclusion. It's an inauguration.",
+    lessons:[
+      {title:"The Lover Is Not Someone You Find", desc:"The final reframe: the qualities you've been seeking in others — presence, depth, aliveness — are the qualities of the Lover awakened within you."},
+      {title:"King and Lover in Dialogue", desc:"How to hold the structure of the King archetype without sacrificing the aliveness of the Lover. The integration is not a compromise — it's a more complete self."},
+      {title:"Desire as Navigation, Not Danger", desc:"What it looks like to use desire as compass rather than threat. Practical: relationships, creative choices, how you spend time and attention."},
+      {title:"The New Architecture", desc:"A map of who you are now. Not a destination — a new starting position. What changes, what stays the same, and what is now simply more true."},
+    ],
+    experience:{title:"The Declaration", type:"PERSONAL MANIFESTO RITUAL", desc:"Write a personal manifesto — not aspirational, but declarative. Present tense. Who you are now that the Lover is awake. Read it aloud, alone, in private. This is the ritual close of the course."},
+    anchor:"\"The man you became to survive was remarkable. The man you're becoming now — he gets to actually live.\"",
+  },
+];
+
+const specs = [
+  ["FORMAT","Self-paced + cohort rhythm"],
+  ["DURATION","48 days total"],
+  ["PRACTICES","6 experiential rituals"],
+  ["DELIVERY","Text + audio guided sessions"],
+  ["ACCESS","Lifetime + community"],
+  ["AUDIENCE","Men 35–55 · Private cohort"],
+];
+
+let active = 0;
+
+function rgba(hex, a) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+function render() {
+  const ch = chapters[active];
+
+  document.getElementById('ambient').style.background =
+    `radial-gradient(circle, ${rgba(ch.color,0.07)} 0%, transparent 65%)`;
+  document.getElementById('accent-word').style.color = ch.color;
+
+  // Nav
+  const nav = document.getElementById('phase-nav');
+  nav.innerHTML = '';
+  chapters.forEach((c,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'phase-btn' + (i===active?' active':'');
+    btn.style.borderBottomColor = i===active ? c.color : 'transparent';
+    if (i===active) { btn.style.setProperty('--active-color', c.color); }
+    btn.innerHTML = `<span class="phase-num" style="${i===active?`color:${c.color}`:''}">${c.num}</span><span class="phase-label" style="${i===active?`color:${c.color}`:''}">${c.phase}</span>`;
+    btn.addEventListener('click',()=>{ active=i; render(); });
+    nav.appendChild(btn);
+  });
+
+  // Left column
+  const left = document.getElementById('col-left');
+  left.innerHTML = '';
+  left.classList.remove('fadein');
+  void left.offsetWidth;
+  left.classList.add('fadein');
+
+  // Header card
+  const hc = document.createElement('div');
+  hc.className = 'card header-card';
+  hc.style.borderTopColor = ch.color;
+  hc.innerHTML = `
+    <div class="ch-meta">
+      <span class="ch-meta-left" style="color:${ch.color}">CHAPTER ${ch.num} · ${ch.phase} · ${ch.duration}</span>
+      <span class="ch-symbol" style="color:${ch.color}">${ch.symbol}</span>
+    </div>
+    <h2 class="ch-title">${ch.title}</h2>
+    <div class="ch-subtitle">${ch.subtitle}</div>
+    <div class="anchor-quote" style="border-left-color:${ch.color}">
+      <p>${ch.anchor}</p>
+    </div>
+    <div class="transform-bar">
+      <span>${ch.transformation}</span>
+    </div>
+  `;
+  left.appendChild(hc);
+
+  // Why card
+  const wc = document.createElement('div');
+  wc.className = 'card';
+  wc.innerHTML = `<span class="card-label">Why this chapter works</span><p class="why-text">${ch.why}</p>`;
+  left.appendChild(wc);
+
+  // Lessons
+  const lc = document.createElement('div');
+  lc.className = 'card';
+  lc.innerHTML = `<span class="card-label">Lessons</span><div class="lessons-list" id="ll"></div>`;
+  left.appendChild(lc);
+  const ll = lc.querySelector('#ll');
+  ch.lessons.forEach((l,i) => {
+    const item = document.createElement('div');
+    item.className = 'lesson-item';
+    item.innerHTML = `
+      <div class="lesson-num" style="border-color:${rgba(ch.color,0.4)};color:${ch.color}">${i+1}</div>
+      <div>
+        <div class="lesson-title">${l.title}</div>
+        <div class="lesson-desc">${l.desc}</div>
+      </div>`;
+    ll.appendChild(item);
+  });
+
+  // Right column
+  const right = document.getElementById('col-right');
+  right.innerHTML = '';
+
+  // Promise
+  const pc = document.createElement('div');
+  pc.className = 'card promise-card';
+  pc.style.borderColor = rgba(ch.color,0.35);
+  pc.innerHTML = `<span class="card-label" style="color:${ch.color}">Chapter Promise</span><p class="promise-text">${ch.promise}</p>`;
+  right.appendChild(pc);
+
+  // Practice
+  const prc = document.createElement('div');
+  prc.className = 'card practice-card';
+  prc.innerHTML = `
+    <div class="practice-glow" style="background:radial-gradient(circle at top right,${rgba(ch.color,0.15)},transparent 70%)"></div>
+    <span class="card-label">Experiential Practice</span>
+    <span class="practice-type" style="color:${ch.color};background:${rgba(ch.color,0.15)}">${ch.experience.type}</span>
+    <div class="practice-title">${ch.experience.title}</div>
+    <p class="practice-desc">${ch.experience.desc}</p>`;
+  right.appendChild(prc);
+
+  // Journey map
+  const jc = document.createElement('div');
+  jc.className = 'card';
+  jc.innerHTML = '<span class="card-label">Journey Map</span>';
+  chapters.forEach((c,i) => {
+    const ji = document.createElement('div');
+    ji.className = 'journey-item' + (i===active?' active':'');
+    ji.innerHTML = `
+      <div class="journey-dot" style="${i===active?`border-color:${c.color};color:${c.color}`:''}">${c.num}</div>
+      <span class="journey-name">${c.title}</span>
+      <span class="journey-phase" style="${i===active?`color:${c.color}`:''}">${c.phase}</span>`;
+    ji.addEventListener('click',()=>{ active=i; render(); });
+    jc.appendChild(ji);
+  });
+  right.appendChild(jc);
+
+  // Specs
+  const sc = document.createElement('div');
+  sc.className = 'card';
+  sc.innerHTML = '<span class="card-label">Course Specs</span>';
+  specs.forEach(([k,v]) => {
+    const row = document.createElement('div');
+    row.className = 'spec-row';
+    row.innerHTML = `<span class="spec-key">${k}</span><span class="spec-val">${v}</span>`;
+    sc.appendChild(row);
+  });
+  right.appendChild(sc);
+}
+
+render();
+</script>
+</body>
+</html>
